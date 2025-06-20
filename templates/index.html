@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Startseite</title>
+    <title>ReGive - Einloggen oder Registrieren</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Willkommen zur Startseite!</h1>
+    <h1>Willkommen bei ReGive</h1>
+    <div>
+        <h2>Jetzt einloggen!</h2>
+        <button>Login als Organisation</button>
+        <br>
+        <button>Login als Spender</button>
+    </div>
+    <div>
+        <h2>Noch nicht registriert?</h2>
+        <button>Registrierung als Organisation</button>
+        <br>
+        <button>Registrierung als Spender</button>
+    </div>
 </body>
 </html>

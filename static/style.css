@@ -1,0 +1,13 @@
+body {
+    text-align: center;
+}
+button {
+    background-color: green;
+    color: white;
+    margin: 10px;
+    padding: 10px;
+    font-size: 20px;
+}
+div {
+    padding: 50px;
+}
