@@ -8,19 +8,20 @@
 <body>
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
     <h1>ReGive - Spenden statt entsorgen.</h1>
-    <p> Wir verbinden ungenutzte Rückgabeartikel aus dem Einkaufsschutz mit gemeinnützigen Organisationen.</p>
-    <p>So schaffen wir gesellschaftlichen Mehrwert und reduzieren Ressourcenverschwendung.</p>
-    <div>
-        <h2>Jetzt einloggen!</h2>
-        <button>Login als Organisation</button>
+    <p> Wir verbinden ungenutzte Rückgabeartikel aus dem Einkaufsschutz mit gemeinnützigen Organisationen.
         <br>
-        <button>Login als Spender</button>
+        So schaffen wir gesellschaftlichen Mehrwert und reduzieren Ressourcenverschwendung.</p>
+    <div>
+        <h2>Jetzt einloggen</h2>
+        <button onclick="window.location.href='{{ url_for('login_organisation') }}'">Login als Organisation</button>
+        <br>
+        <button onclick="window.location.href='{{ url_for('login_spender') }}'">Login als Spender</button>
     </div>
     <div>
         <h2>Noch nicht registriert?</h2>
-        <button>Registrierung als Organisation</button>
+        <button onclick="window.location.href='{{ url_for('register_organisation') }}'">Registrierung als Organisation</button>
         <br>
-        <button>Registrierung als Spender</button>
+        <button onclick="window.location.href='{{ url_for('register_spender') }}'">Registrierung als Spender</button>
     </div>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Spenden</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('startseite') }}">Startseite</a>
+        <a href="{{ url_for('suche') }}">Suche</a>
+        <a href="{{ url_for('spenden') }}" class="active">Spenden</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+    </nav>
+
+    <section>
+        <h2>Sachspende hochladen</h2>
+        <form>
+            <input type="file" name="foto">
+            <input type="text" name="produkt" placeholder="Produktbezeichnung">
+            <input type="text" name="ort" placeholder="Ort">
+            <input type="date" name="kaufdatum" placeholder="Kaufdatum">
+            <button type="submit">Spende hochladen</button>
+        </form>
+
+        <h2>Geldspende</h2>
+        <form>
+            <input type="number" name="betrag" placeholder="Betrag">
+            <select name="organisation">
+                <option>Organisation1</option>
+                <option>Organisation2</option>
+            </select>
+            <select name="zahlungsmethode">
+                <option>PayPal</option>
+                <option>Kreditkarte</option>
+            </select>
+            <button type="submit">Spenden</button>
+        </form>
+    </section>
+</body>
+</html>

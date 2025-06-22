@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Suche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('startseite') }}">Startseite</a>
+        <a href="{{ url_for('suche') }}" class="active">Suche</a>
+        <a href="{{ url_for('spenden') }}">Spenden</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+    </nav>
+</body>
+</html>
