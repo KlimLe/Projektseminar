@@ -6,7 +6,7 @@ def index():
 
 @app.route('/register')
 def register():
-    return render_template('registration.html')
+    return render_template('registration_donor.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
