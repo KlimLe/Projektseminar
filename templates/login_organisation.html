@@ -7,10 +7,12 @@
 </head>
 <body>
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <p>E-Mail-Adresse</p>
-    <input type="text" name="textfeld" title="Text" placeholder="E-Mail-Adresse eingeben" value=""/>
-    <p>Passwort</p>
-    <input type="password" name="passwortfeld" title="Passwort" placeholder="Passwort eingeben"/>
-    <button onclick="window.location.href='{{ url_for('startseite') }}'">Login</button>
+    <form method="POST" action="{{ url_for('login_organisation') }}">
+        <p>E-Mail-Adresse</p>
+        <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
+        <p>Passwort</p>
+        <input type="password" name="passwort" placeholder="Passwort eingeben" required>
+        <button type="submit">Login</button>
+    </form>
 </body>
 </html>

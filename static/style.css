@@ -1,14 +1,78 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 40px;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: #333;
 }
 
-h2 {
-    color: #215a0a;
+h1, h2, h3 {
+    color: #1b5e20;
+    margin-top: 20px;
+}
+
+p, li, label {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+section {
+    padding: 20px;
+}
+
+nav {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ccc;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+    padding: 8px 14px;
+    font-weight: bold;
+}
+
+nav a.active {
+    background-color: #2e7d32;
+    color: white;
+    border-radius: 4px;
+}
+
+button, .btn {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: bold;
+    display: inline-block;
+}
+
+button:hover, .btn:hover {
+    background-color: #1b5e20;
+}
+
+button.secondary {
+    background-color: white;
+    color: #2b7a0b;
+    border: 2px solid #2b7a0b;
+    margin-top: 10px;
+}
+
+button.secondary:hover {
+    background-color: #e8f5e9;
 }
 
 form {
     max-width: 400px;
+    margin: auto;
 }
 
 label {
@@ -19,39 +83,68 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="file"] {
+input[type="date"],
+input[type="number"],
+input[type="file"],
+select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-top: 5px;
+    margin-bottom: 14px;
     border: 1px solid #2b7a0b;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.product-item {
+    text-align: center;
+}
+
+.product-item img {
+    width: 100%;
     border-radius: 4px;
 }
 
-button {
+.product-item p {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+}
+
+.profile {
+    text-align: center;
     margin-top: 20px;
-    padding: 10px;
-    width: 100%;
-    background-color: #2b7a0b;
-    color: white;
-    border: none;
-    border-radius: 5px;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 20px;
     font-weight: bold;
-    cursor: pointer;
+    margin: 8px 0 4px 0;
 }
 
-button:hover {
-    background-color: #256b09;
-}
-
-.secondary {
-    background-color: white;
-    color: #2b7a0b;
-    border: 2px solid #2b7a0b;
-    margin-top: 10px;
-}
-
-.secondary:hover {
-    background-color: #e8f5e9;
+.profile-email {
+    color: #666;
 }
 
 .center {
@@ -69,61 +162,4 @@ button:hover {
 
 .error {
     color: red;
-}
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-nav {
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    border-bottom: 2px solid #ccc;
-}
-
-nav a {
-    text-decoration: none;
-    color: black;
-    padding: 6px 12px;
-}
-
-nav a.active {
-    background-color: #2d6a4f;
-    color: white;
-    border-radius: 5px;
-}
-
-h1, h2, h3 {
-    color: #2d6a4f;
-}
-
-section {
-    padding: 16px;
-}
-
-button, .btn {
-    background-color: #2d6a4f;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-input, select {
-    display: block;
-    margin-bottom: 12px;
-    padding: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.card {
-    background-color: #f5f5f5;
-    padding: 16px;
-    border-radius: 10px;
-    margin: 10px 0;
 }

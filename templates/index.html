@@ -11,13 +11,13 @@
     <p> Wir verbinden ungenutzte Rückgabeartikel aus dem Einkaufsschutz mit gemeinnützigen Organisationen.
         <br>
         So schaffen wir gesellschaftlichen Mehrwert und reduzieren Ressourcenverschwendung.</p>
-    <div>
+    <div class="login-buttons">
         <h2>Jetzt einloggen</h2>
         <button onclick="window.location.href='{{ url_for('login_organisation') }}'">Login als Organisation</button>
         <br>
         <button onclick="window.location.href='{{ url_for('login_spender') }}'">Login als Spender</button>
     </div>
-    <div>
+    <div class="login-buttons">
         <h2>Noch nicht registriert?</h2>
         <button onclick="window.location.href='{{ url_for('register_organisation') }}'">Registrierung als Organisation</button>
         <br>
