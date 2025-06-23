@@ -12,5 +12,31 @@
         <a href="{{ url_for('spenden') }}">Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
     </nav>
+
+    <main class="content">
+        <label for="kategorie">Kategorien</label>
+        <select id="kategorie" name="kategorie">
+            <option>Empfehlungen</option>
+        </select>
+
+        <div class="item-grid">
+            <div class="item">
+                <img src="https://via.placeholder.com/150" alt="Kleid rot">
+                <p>Kleid rot<br>Erlangen</p>
+            </div>
+            <div class="item">
+                <img src="https://via.placeholder.com/150" alt="Kinderbuch">
+                <p>Kinderbuch<br>Fürth</p>
+            </div>
+            <div class="item">
+                <img src="https://via.placeholder.com/150" alt="Plüschtier">
+                <p>Plüschtier<br>Erlangen</p>
+            </div>
+            <div class="item">
+                <img src="https://via.placeholder.com/150" alt="Damen T-Shirt">
+                <p>Weißes Damen Tshirt<br>Nürnberg</p>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
