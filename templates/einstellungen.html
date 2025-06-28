@@ -5,7 +5,7 @@
     <title>Einstellungen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body id="einstellungen-page">
     <nav>
         <a href="{{ url_for('startseite') }}">Startseite</a>
         <a href="{{ url_for('suche') }}">Suche</a>
@@ -13,8 +13,12 @@
         <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
     </nav>
 
-    <section>
+        <div class="banner">
         <h2>Profil</h2>
+        </div>
+
+    <section>
+
         <div style="text-align: center;">
             <img src="profilbild.jpg" alt="Profilbild" style="width:100px; border-radius:50%;">
             <p><strong>Max Mustermann</strong><br>max.mustermann@gmail.com</p>
@@ -22,19 +26,20 @@
 
         <div class="card">
             <h3>Allgemeine Einstellungen</h3>
-            <label>
-                Mode: Dark & Light
-                <input type="checkbox" checked>
-            </label>
-            <p><a href="#">Passwort ändern</a></p>
-            <p><a href="#">Sprache ändern</a></p>
         </div>
+        <label>
+            Mode: Dark & Light
+            <input type="checkbox" checked>
+        </label>
+        <p><a href="#">Passwort ändern</a></p>
+        <p><a href="#">Sprache ändern</a></p>
+
 
         <div class="card">
             <h3>Informationen</h3>
-            <p><a href="#">Datenschutz</a></p>
-            <p><a href="#">Privacy Policy</a></p>
         </div>
+        <p><a href="#">Datenschutz</a></p>
+        <p><a href="#">Privacy Policy</a></p>
     </section>
 </body>
 </html>

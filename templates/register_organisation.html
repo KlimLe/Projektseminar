@@ -5,9 +5,8 @@
     <title>Jetzt registrieren</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <h2>Registrierung als Organisation</h2>
+<body id="register-org-page">
+    <h1>Registrierung als Organisation</h1>
     <form>
         <label for="org-name">Name der Organisation</label>
         <br>
@@ -35,9 +34,9 @@
         <br>
         <button onclick="window.location.href='{{ url_for('startseite') }}'" type="submit">Registrierung abschließen</button>
     </form>
-    <div class="center small-text">Keine Organisation?</div>
-    <div class="center">
+
+    <p class="register-org-page-paragraph">Keine Organisation?
         <button onclick="window.location.href='{{ url_for('register_spender') }}'">Registrierung als Spender</button>
-    </div>
+    </p>
 </body>
 </html>

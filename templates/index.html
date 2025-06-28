@@ -5,18 +5,26 @@
     <title>ReGive - Einloggen oder Registrieren</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <h1>ReGive - Spenden statt entsorgen.</h1>
-    <p> Wir verbinden ungenutzte Rückgabeartikel aus dem Einkaufsschutz mit gemeinnützigen Organisationen.
-        <br>
-        So schaffen wir gesellschaftlichen Mehrwert und reduzieren Ressourcenverschwendung.</p>
+<body id="index-page">
+
+    <div class="index-page-logo">
+    <img class="zentriert" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
+    </div>
+
+    <div class="index-page-paragraph">
+        <h1>ReGive - Spenden statt entsorgen.</h1>
+        <p> Wir verbinden ungenutzte Rückgabeartikel aus dem Einkaufsschutz mit gemeinnützigen Organisationen.
+            <br>
+            So schaffen wir gesellschaftlichen Mehrwert und reduzieren Ressourcenverschwendung.</p>
+    </div>
+
     <div class="login-buttons">
         <h2>Jetzt einloggen</h2>
         <button onclick="window.location.href='{{ url_for('login_organisation') }}'">Login als Organisation</button>
         <br>
         <button onclick="window.location.href='{{ url_for('login_spender') }}'">Login als Spender</button>
     </div>
+
     <div class="login-buttons">
         <h2>Noch nicht registriert?</h2>
         <button onclick="window.location.href='{{ url_for('register_organisation') }}'">Registrierung als Organisation</button>

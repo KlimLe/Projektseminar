@@ -5,12 +5,18 @@
     <title>Jetzt einloggen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body id="login-spender-page">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <p>E-Mail-Adresse</p>
-    <input type="text" name="textfeld" title="Text" placeholder="E-Mail-Adresse eingeben" value=""/>
-    <p>Passwort</p>
-    <input type="password" name="passwortfeld" title="Passwort" placeholder="Passwort eingeben"/>
-    <button onclick="window.location.href='{{ url_for('startseite') }}'">Login</button>
+    <form>
+        <p>E-Mail-Adresse</p>
+        <label>
+            <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
+        </label>
+        <p>Passwort</p>
+        <label>
+            <input type="password" name="passwort" placeholder="Passwort eingeben" required>
+        </label>
+        <button type="submit">Login</button>
+    </form>
 </body>
 </html>

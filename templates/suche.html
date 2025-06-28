@@ -5,7 +5,7 @@
     <title>Suche</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body id="suche-page">
     <nav>
         <a href="{{ url_for('startseite') }}">Startseite</a>
         <a href="{{ url_for('suche') }}" class="active">Suche</a>
@@ -16,6 +16,10 @@
     <main class="content">
         <label for="kategorie">Kategorien</label>
         <select id="kategorie" name="kategorie">
+            <option>Damenbekleidung</option>
+            <option>Herrenbekleidung</option>
+            <option>Kinderartikel</option>
+            <option>Elektronik</option>
             <option>Empfehlungen</option>
         </select>
 

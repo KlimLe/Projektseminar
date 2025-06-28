@@ -5,13 +5,17 @@
     <title>Jetzt einloggen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body id="login-org-page">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <form method="POST" action="{{ url_for('login_organisation') }}">
+    <form>
         <p>E-Mail-Adresse</p>
-        <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
+        <label>
+            <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
+        </label>
         <p>Passwort</p>
-        <input type="password" name="passwort" placeholder="Passwort eingeben" required>
+        <label>
+            <input type="password" name="passwort" placeholder="Passwort eingeben" required>
+        </label>
         <button type="submit">Login</button>
     </form>
 </body>
