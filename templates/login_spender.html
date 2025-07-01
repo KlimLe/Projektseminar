@@ -7,15 +7,20 @@
 </head>
 <body id="login-spender-page">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
-    <form>
+
+    {% if fehler %}
+        <p style="color: red;">{{ fehler }}</p>
+    {% endif %}
+
+    <form method="post">
         <p>E-Mail-Adresse</p>
-        <label>
-            <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
-        </label>
+        <label for="email">E-Mail-Adresse</label>
+            <input type="text" id="email" name="email" placeholder="E-Mail-Adresse eingeben" required>
+
         <p>Passwort</p>
-        <label>
-            <input type="password" name="passwort" placeholder="Passwort eingeben" required>
-        </label>
+        <label for="passwort">Passwort</label>
+            <input type="password" id="passwort" name="passwort" placeholder="Passwort eingeben" required>
+
         <button type="submit">Login</button>
     </form>
 </body>
