@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Jetzt registrieren</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="register-spender-page">
+   <h1>Registrierung als Spender</h1>
+
+    {% if fehler %}
+      <p class="fehler">{{ fehler }}</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('register_spender') }}">
+        <label for="name">Name</label><br>
+        <input type="text" id="name" name="name" placeholder="Wert eingeben" required><br>
+
+        <label for="email">E-Mail</label><br>
+        <input type="email" id="email" name="email" placeholder="Wert eingeben" required><br>
+
+        <label for="passwort">Passwort</label><br>
+        <input type="password" id="passwort" name="passwort" placeholder="Wert eingeben" required><br>
+
+        <label for="passwort-repeat">Passwort wiederholen</label><br>
+        <input type="password" id="passwort-repeat" name="passwort_repeat" placeholder="Wert eingeben" required><br>
+
+        <label for="adresse">Adresse</label><br>
+        <input type="text" id="adresse" name="adresse" placeholder="Wert eingeben" required><br>
+
+        <button type="submit">Registrierung abschließen</button>
+    </form>
+
+    <p class="register-spender-page-paragraph">Kein Spender?
+        <button onclick="window.location.href='{{ url_for('register_organisation') }}'">Registrierung als Organisation</button>
+    </p>
+</body>
+</html>

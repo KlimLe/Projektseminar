@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Suche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="suche-page">
+    <nav>
+    <a href="{{ url_for('startseite') }}">Startseite</a>
+
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('suche') }}" class="active">Suche</a>
+        <a href="{{ url_for('spenden') }}">Spenden</a>
+        <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+
+    {% elif session.get('org_id') %}
+        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+    {% endif %}
+
+    {% if session.get('user_id') or session.get('org_id') %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+    </nav>
+
+    <main class="content">
+        <label for="kategorie">Kategorien</label>
+        <select id="kategorie" name="kategorie">
+            <option>Damenbekleidung</option>
+            <option>Herrenbekleidung</option>
+            <option>Kinderartikel</option>
+            <option>Elektronik</option>
+            <option>Empfehlungen</option>
+        </select>
+
+        <div class="item-grid">
+            {% if sachspenden %}
+                {% for spende in sachspenden %}
+                    <div class="item">
+                        <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="Spendenbild">
+                        <p><strong>{{ spende['produkt'] }}</strong><br>{{ spende['ort'] }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Keine Spenden vorhanden.</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

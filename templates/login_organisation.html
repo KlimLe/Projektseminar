@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Jetzt einloggen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="login-org-page">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
+    <form method="post">
+        <p>E-Mail-Adresse</p>
+        <label>
+            <input type="text" name="email" placeholder="E-Mail-Adresse eingeben" required>
+        </label>
+        <p>Passwort</p>
+        <label>
+            <input type="password" name="passwort" placeholder="Passwort eingeben" required>
+        </label>
+        <button type="submit">Login</button>
+    </form>
+
+    {% if fehler %}
+        <p class="fehler-meldung" style="color: red;">{{ fehler }}</p>
+    {% endif %}
+</body>
+</html>

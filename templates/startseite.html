@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>ReGive - Spenden statt entsorgen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="startseite-page">
+    <nav>
+    <a href="{{ url_for('startseite') }}" class="active">Startseite</a>
+
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('suche') }}">Suche</a>
+        <a href="{{ url_for('spenden') }}">Spenden</a>
+        <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+
+    {% elif session.get('org_id') %}
+        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+    {% endif %}
+
+    {% if session.get('user_id') or session.get('org_id') %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+    </nav>
+    <div  id="startseite-page-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
+    </div>
+    <section>
+        <h2>Willkommen bei ReGive</h2>
+        <div class="card">
+            <strong>Gemeinsam gegen Verschwendung.<br>Für mehr gesellschaftlichen Nutzen.</strong>
+        </div>
+        <p><em>Was passiert mit Produkten, die du eigentlich zurückgeben könntest, aber nicht mehr brauchst?</em></p>
+        <p>Viele Versicherungen und Kreditkartenanbieter bieten Einkaufsschutz: Du bekommst dein Geld zurück – aber das Produkt bleibt oft ungenutzt bei dir. Genau hier setzt unsere Plattform an.</p>
+
+        <h3>Unsere Idee</h3>
+        <p>Wir bringen Menschen mit Einkaufsschutz und gemeinnützige Organisationen zusammen. Statt ungenutzte Waren wegzuwerfen oder irgendwo zu lagern, kannst du sie mit wenigen Klicks spenden – dorthin, wo sie wirklich gebraucht werden.</p>
+
+        <h3>So funktioniert’s:</h3>
+        <ol>
+            <li>Du erhältst von deiner Versicherung die Erstattung – ganz wie gewohnt.</li>
+            <li>Das Produkt bleibt bei dir – aber du willst es nicht mehr behalten?</li>
+            <li>Auf unserer Plattform kannst du es einfach registrieren und spenden.</li>
+            <li>Wir kümmern uns um Abholung, Verteilung und, falls gewünscht, eine Spendenquittung.</li>
+        </ol>
+    </section>
+</body>
+</html>
