@@ -51,7 +51,7 @@ def register_spender():
 
     return render_template('register_spender.html', fehler='E-Mail bereits registriert.')
 
-@app.route('/register_organisation')
+@app.route('/register_organisation', methods=['GET', 'POST'])
 def register_organisation():
     if request.method == 'POST':
         name = request.form['org-name']
@@ -64,6 +64,8 @@ def register_organisation():
         if passwort != passwort_repeat:
             return 'Passwörter stimmen nicht überein'
 
+        hashed_password = generate_password_hash(passwort)
+
         zertifikat_pfad = None
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -72,7 +74,7 @@ def register_organisation():
 
         conn = get_db_connection()
         conn.execute('INSERT INTO organisation (name, email, passwort, adresse, zertifikat) VALUES (?, ?, ?, ?, ?)',
-                     (name, email, passwort, adresse, zertifikat_pfad))
+                     (name, email, hashed_password, adresse, zertifikat_pfad))
         conn.commit()
         conn.close()
 
@@ -98,8 +100,21 @@ def login_spender():
 
     return render_template('login_spender.html')
 
-@app.route('/login_organisation')
+@app.route('/login_organisation', methods=['GET', 'POST'])
 def login_organisation():
+    if request.method == 'POST':
+        email = request.form['email']
+        passwort = request.form['passwort']
+
+        conn = get_db_connection()
+        org = conn.execute('SELECT * FROM organisation WHERE email = ?', (email,)).fetchone()
+        conn.close()
+
+        if org and check_password_hash(org['passwort'], passwort):
+            session['org_id'] = org['id']
+            return redirect(url_for('startseite'))  # Oder eigene Organisationsseite
+        else:
+            return render_template('login_organisation.html', fehler='Login fehlgeschlagen. Bitte überprüfe deine Daten.')
 
     return render_template('login_organisation.html')
 
@@ -110,10 +125,17 @@ def logout():
 
 @app.route('/startseite')
 def startseite():
-    return render_template('startseite.html')
+    if 'user_id' in session:
+        return render_template('startseite.html')
+    elif 'org_id' in session:
+        return render_template('startseite_organisation.html')
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/suche')
 def suche():
+    if 'user_id' not in session:
+        return redirect(url_for('login_spender'))
     conn = get_db_connection()
     sachspenden = conn.execute('SELECT * FROM sachspende').fetchall()
     conn.close()
@@ -182,6 +204,19 @@ def meine_spenden():
     conn.close()
 
     return render_template('meine_spenden.html', sachspenden=sachspenden, geldspenden=geldspenden)
+
+@app.route('/zertifikate')
+def zertifikate():
+    if 'org_id' not in session:
+        return redirect(url_for('login_organisation'))
+
+    org_id = session['org_id']
+    conn = get_db_connection()
+    org = conn.execute('SELECT zertifikat FROM organisation WHERE id = ?', (org_id,)).fetchone()
+    conn.close()
+
+    zertifikat_pfad = org['zertifikat'] if org and org['zertifikat'] else None
+    return render_template('zertifikate.html', zertifikat_pfad=zertifikat_pfad)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

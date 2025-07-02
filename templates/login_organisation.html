@@ -18,5 +18,9 @@
         </label>
         <button type="submit">Login</button>
     </form>
+
+    {% if fehler %}
+        <p class="fehler-meldung" style="color: red;">{{ fehler }}</p>
+    {% endif %}
 </body>
 </html>

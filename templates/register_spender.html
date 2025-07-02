@@ -12,7 +12,7 @@
       <p class="fehler">{{ fehler }}</p>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" action="{{ url_for('register_spender') }}">
         <label for="name">Name</label><br>
         <input type="text" id="name" name="name" placeholder="Wert eingeben" required><br>
 
@@ -23,7 +23,7 @@
         <input type="password" id="passwort" name="passwort" placeholder="Wert eingeben" required><br>
 
         <label for="passwort-repeat">Passwort wiederholen</label><br>
-        <input type="password" id="passwort-repeat" name="passwort-repeat" placeholder="Wert eingeben" required><br>
+        <input type="password" id="passwort-repeat" name="passwort_repeat" placeholder="Wert eingeben" required><br>
 
         <label for="adresse">Adresse</label><br>
         <input type="text" id="adresse" name="adresse" placeholder="Wert eingeben" required><br>
