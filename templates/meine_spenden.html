@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Meine Spenden</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="meine-spenden-page">
+    <nav>
+        <a href="{{ url_for('startseite') }}">Startseite</a>
+        <a href="{{ url_for('suche') }}">Suche</a>
+        <a href="{{ url_for('spenden') }}">Spenden</a>
+        <a href="{{ url_for('meine_spenden') }}" class="active">Meine Spenden</a>
+        <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+
+    <main class="content">
+        <h1>Meine Sachspenden</h1>
+        {% if sachspenden %}
+            <ul>
+                {% for s in sachspenden %}
+                    <li><strong>{{ s['produkt'] }}</strong> – {{ s['ort'] }} – {{ s['kaufdatum'] or "unbekannt" }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Keine Sachspenden eingetragen.</p>
+        {% endif %}
+
+        <h1>Meine Geldspenden</h1>
+        {% if geldspenden %}
+            <ul>
+                {% for g in geldspenden %}
+                    <li>{{ g['betrag'] }} € – {{ g['organisation'] }} – {{ g['zahlungsmethode'] }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Keine Geldspenden eingetragen.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

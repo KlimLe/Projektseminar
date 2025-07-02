@@ -10,7 +10,9 @@
         <a href="{{ url_for('startseite') }}">Startseite</a>
         <a href="{{ url_for('suche') }}" class="active">Suche</a>
         <a href="{{ url_for('spenden') }}">Spenden</a>
+        <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
     </nav>
 
     <main class="content">
@@ -24,22 +26,16 @@
         </select>
 
         <div class="item-grid">
-            <div class="item">
-                <img src="placeholder.jpg" alt="Kleid rot">
-                <p>Kleid rot<br>Erlangen</p>
-            </div>
-            <div class="item">
-                <img src="placeholder.jpg" alt="Kinderbuch">
-                <p>Kinderbuch<br>Fürth</p>
-            </div>
-            <div class="item">
-                <img src="placeholder.jpg" alt="Plüschtier">
-                <p>Plüschtier<br>Erlangen</p>
-            </div>
-            <div class="item">
-                <img src="placeholder.jpg" alt="Damen T-Shirt">
-                <p>Weißes Damen Tshirt<br>Nürnberg</p>
-            </div>
+            {% if sachspenden %}
+                {% for spende in sachspenden %}
+                    <div class="item">
+                        <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="Spendenbild">
+                        <p><strong>{{ spende['produkt'] }}</strong><br>{{ spende['ort'] }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Keine Spenden vorhanden.</p>
+            {% endif %}
         </div>
     </main>
 </body>
