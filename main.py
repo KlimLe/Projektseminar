@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/zertifikate'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
-app.secret_key = 'supergeheim'
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
 app.config['UPLOAD_FOLDER'] = 'static/zertifikate'
 app.config['DEBUG'] = True
 
