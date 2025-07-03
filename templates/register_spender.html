@@ -8,10 +8,6 @@
 <body id="register-spender-page">
    <h1>Registrierung als Spender</h1>
 
-    {% if fehler %}
-      <p class="fehler">{{ fehler }}</p>
-    {% endif %}
-
     <form method="POST" action="{{ url_for('register_spender') }}">
         <label for="name">Name</label><br>
         <input type="text" id="name" name="name" placeholder="Wert eingeben" required><br>
@@ -34,5 +30,9 @@
     <p class="register-spender-page-paragraph">Kein Spender?
         <button onclick="window.location.href='{{ url_for('register_organisation') }}'">Registrierung als Organisation</button>
     </p>
+
+    {% if fehler %}
+      <p class="fehler">{{ fehler }}</p>
+    {% endif %}
 </body>
 </html>

@@ -2,10 +2,10 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Meine Spenden</title>
+    <title>Spendenübersicht Organisation</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body id="meine-spenden-page">
+<body id="org-spenden-page">
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
@@ -26,26 +26,28 @@
     </nav>
 
     <main class="content">
-        <h1>Meine Sachspenden</h1>
-        {% if sachspenden %}
-            <ul>
-                {% for s in sachspenden %}
-                    <li><strong>{{ s['produkt'] }}</strong> – {{ s['ort'] }} – {{ s['kaufdatum'] or "unbekannt" }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Keine Sachspenden eingetragen.</p>
-        {% endif %}
-
-        <h1>Meine Geldspenden</h1>
+        <h2>Geldspenden an Ihre Organisation</h2>
         {% if geldspenden %}
             <ul>
-                {% for g in geldspenden %}
-                    <li>{{ g['betrag'] }} € – {{ g['organisation'] }} – {{ g['zahlungsmethode'] }}</li>
-                {% endfor %}
+            {% for spende in geldspenden %}
+                <li>{{ spende['betrag'] }} € – {{ spende['zahlungsmethode'] }}</li>
+            {% endfor %}
             </ul>
         {% else %}
-            <p>Keine Geldspenden eingetragen.</p>
+            <p>Keine Geldspenden vorhanden.</p>
+        {% endif %}
+
+        <h2>Verfügbare Sachspenden</h2>
+        {% if sachspenden %}
+            <ul>
+            {% for spende in sachspenden %}
+                <li>
+                    {{ spende['produkt'] }} ({{ spende['ort'] }}) – {{ spende['kaufdatum'] }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Keine Sachspenden verfügbar.</p>
         {% endif %}
     </main>
 </body>

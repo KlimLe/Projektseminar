@@ -16,7 +16,7 @@
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
     {% endif %}
 

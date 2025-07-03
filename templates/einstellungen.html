@@ -16,7 +16,7 @@
         <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
     {% endif %}
 
@@ -32,8 +32,8 @@
     <section>
 
         <div style="text-align: center;">
-            <img src="profilbild.jpg" alt="Profilbild" style="width:100px; border-radius:50%;">
-            <p><strong>Max Mustermann</strong><br>max.mustermann@gmail.com</p>
+            <img src="{{ url_for('static', filename='images/profilbild.jpg') }}" alt="Profilbild" style="width:100px; border-radius:50%;">
+            <p><strong>{{ nutzer['name'] }}</strong><br>{{ nutzer['email'] }}</p>
         </div>
 
         <div class="card">
@@ -45,7 +45,12 @@
         </label>
         <p><a href="#">Passwort ändern</a></p>
         <p><a href="#">Sprache ändern</a></p>
-
+        {% if session.get('org_id') %}
+            <div class="card">
+                <h3>Organisation</h3>
+                <p><a href="{{ url_for('zertifikate') }}">Zertifikats-Upload & Übersicht</a></p>
+            </div>
+        {% endif %}
 
         <div class="card">
             <h3>Informationen</h3>

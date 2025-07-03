@@ -186,7 +186,19 @@ def spenden():
 
 @app.route('/einstellungen')
 def einstellungen():
-    return render_template('einstellungen.html')
+    if 'user_id' in session:
+        conn = get_db_connection()
+        nutzer = conn.execute('SELECT * FROM spender WHERE id = ?', (session['user_id'],)).fetchone()
+        conn.close()
+        return render_template('einstellungen.html', nutzer=nutzer)
+
+    elif 'org_id' in session:
+        conn = get_db_connection()
+        orga = conn.execute('SELECT * FROM organisation WHERE id = ?', (session['org_id'],)).fetchone()
+        conn.close()
+        return render_template('einstellungen.html', nutzer=orga)
+
+    return redirect(url_for('index'))
 
 @app.route('/meine_spenden')
 def meine_spenden():
@@ -205,18 +217,47 @@ def meine_spenden():
 
     return render_template('meine_spenden.html', sachspenden=sachspenden, geldspenden=geldspenden)
 
-@app.route('/zertifikate')
+@app.route('/zertifikate', methods=['GET', 'POST'])
 def zertifikate():
+    if 'org_id' not in session:
+        return redirect(url_for('login_organisation'))
+
+    conn = get_db_connection()
+
+    if request.method == 'POST':
+        file = request.files.get('zertifikat')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            pfad = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(pfad)
+
+            conn.execute("UPDATE organisation SET zertifikat = ? WHERE id = ?", (pfad, session['org_id']))
+            conn.commit()
+
+    org = conn.execute('SELECT * FROM organisation WHERE id = ?', (session['org_id'],)).fetchone()
+    conn.close()
+
+    return render_template('zertifikate.html', org=org)
+
+@app.route('/org_spenden')
+def org_spenden():
     if 'org_id' not in session:
         return redirect(url_for('login_organisation'))
 
     org_id = session['org_id']
     conn = get_db_connection()
-    org = conn.execute('SELECT zertifikat FROM organisation WHERE id = ?', (org_id,)).fetchone()
-    conn.close()
 
-    zertifikat_pfad = org['zertifikat'] if org and org['zertifikat'] else None
-    return render_template('zertifikate.html', zertifikat_pfad=zertifikat_pfad)
+    geldspenden = conn.execute(
+        'SELECT * FROM geldspende WHERE organisation = (SELECT name FROM organisation WHERE id = ?)',
+        (org_id,)
+    ).fetchall()
+
+    sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE user_id IS NOT NULL'
+    ).fetchall()
+
+    conn.close()
+    return render_template('org_spenden.html', geldspenden=geldspenden, sachspenden=sachspenden)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
