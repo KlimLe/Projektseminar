@@ -50,22 +50,6 @@
         {% else %}
             <p>Noch keine Sachspenden angenommen.</p>
         {% endif %}
-
-        <h2>Verfügbare Sachspenden</h2>
-        {% if verfuegbare_sachspenden %}
-            <ul>
-                {% for spende in verfuegbare_sachspenden %}
-                    <li>
-                        {{ spende.produkt }} – {{ spende.ort }} (gekauft am {{ spende.kaufdatum }})
-                        <form method="post" action="{{ url_for('spende_annehmen', spende_id=spende.id) }}">
-                            <button type="submit">Annehmen</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Keine Spenden verfügbar.</p>
-        {% endif %}
     </main>
 </body>
 </html>

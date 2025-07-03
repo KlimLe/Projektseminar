@@ -42,14 +42,21 @@
             {% if sachspenden %}
                 {% for spende in sachspenden %}
                     <div class="item">
-                        <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="Spendenbild">
-                        <p><strong>{{ spende['produkt'] }}</strong><br>{{ spende['ort'] }}</p>
+                      {% if spende['bild'] %}
+                        <img src="{{ url_for('static', filename=spende['bild']) }}" alt="Bild der Spende" style="max-width: 200px;">
+                      {% else %}
+                        <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="Kein Bild verfügbar" style="max-width: 200px;">
+                      {% endif %}
 
-                        {% if session.get('org_id') %}
-                            <form action="{{ url_for('spende_annehmen', spende_id=spende['id']) }}" method="post">
-                                <button type="submit">Spende annehmen</button>
-                            </form>
-                        {% endif %}
+                      <p><strong>{{ spende['produkt'] }}</strong><br>{{ spende['ort'] }}</p>
+
+                      {% if session.get('org_id') %}
+                        <div>
+                          <form action="{{ url_for('spende_annehmen', spende_id=spende['id']) }}" method="post">
+                              <button type="submit">Spende annehmen</button>
+                          </form>
+                        </div>
+                      {% endif %}
                     </div>
                 {% endfor %}
             {% else %}

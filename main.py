@@ -12,10 +12,10 @@ def get_db_connection():
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/zertifikate'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
-app.config['UPLOAD_FOLDER'] = 'static/zertifikate'
+app.config['UPLOAD_FOLDER_ZERTIFIKATE'] = 'static/zertifikate'
+app.config['UPLOAD_FOLDER_SPENDEN'] = 'static/spenden_bilder'
 app.config['DEBUG'] = True
 
 @app.route('/')
@@ -69,7 +69,7 @@ def register_organisation():
         zertifikat_pfad = None
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            zertifikat_pfad = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            zertifikat_pfad = os.path.join(app.config['UPLOAD_FOLDER_ZERTIFIKATE'], filename)
             file.save(zertifikat_pfad)
 
         conn = get_db_connection()
@@ -112,7 +112,7 @@ def login_organisation():
 
         if org and check_password_hash(org['passwort'], passwort):
             session['org_id'] = org['id']
-            return redirect(url_for('startseite'))  # Oder eigene Organisationsseite
+            return redirect(url_for('startseite'))
         else:
             return render_template('login_organisation.html', fehler='Login fehlgeschlagen. Bitte überprüfe deine Daten.')
 
@@ -150,7 +150,6 @@ def spenden():
 
     if request.method == 'POST':
         spendenart = request.form.get('spendenart')
-
         conn = get_db_connection()
         user_id = session['user_id']
 
@@ -159,9 +158,23 @@ def spenden():
                 produkt = request.form['produkt']
                 ort = request.form['ort']
                 kaufdatum = request.form['kaufdatum']
+
+                file = request.files.get('bild')
+                bild_pfad = None
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    spenden_bilder_ordner = app.config['UPLOAD_FOLDER_SPENDEN']
+                    os.makedirs(spenden_bilder_ordner, exist_ok=True)
+                    full_path = os.path.join(spenden_bilder_ordner, filename)
+                    file.save(full_path)
+                    bild_pfad = os.path.join('spenden_bilder', filename).replace('\\', '/')
+                else:
+                    fehler = "Ungültiges Dateiformat. Bitte nur JPG, PNG oder JPEG hochladen."
+                    return render_template('spenden.html', fehler=fehler)
+
                 conn.execute(
-                    'INSERT INTO sachspende (produkt, ort, kaufdatum, user_id) VALUES (?, ?, ?, ?)',
-                    (produkt, ort, kaufdatum, user_id)
+                    'INSERT INTO sachspende (produkt, ort, kaufdatum, user_id, bild) VALUES (?, ?, ?, ?, ?)',
+                    (produkt, ort, kaufdatum, user_id, bild_pfad)
                 )
 
             elif spendenart == 'geld':
@@ -244,7 +257,7 @@ def zertifikate():
         file = request.files.get('zertifikat')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            pfad = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            pfad = os.path.join(app.config['UPLOAD_FOLDER_SPENDEN'], filename)
             file.save(pfad)
 
             conn.execute("UPDATE organisation SET zertifikat = ? WHERE id = ?", (pfad, session['org_id']))
