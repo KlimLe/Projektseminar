@@ -66,6 +66,13 @@ def register_organisation():
 
         hashed_password = generate_password_hash(passwort)
 
+        conn = get_db_connection()
+        existing_org = conn.execute('SELECT * FROM organisation WHERE email = ?', (email,)).fetchone()
+
+        if existing_org:
+            conn.close()
+            return render_template('register_organisation.html', fehler='Diese E-Mail ist bereits registriert.')
+
         zertifikat_pfad = None
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
