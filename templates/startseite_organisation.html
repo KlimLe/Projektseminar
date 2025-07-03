@@ -9,8 +9,11 @@
     <nav>
     <a href="{{ url_for('startseite') }}" class="active">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}">Suche</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
         <a href="{{ url_for('spenden') }}">Spenden</a>
         <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>

@@ -9,8 +9,11 @@
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}" class="active">Suche</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
         <a href="{{ url_for('spenden') }}">Spenden</a>
         <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
@@ -41,6 +44,12 @@
                     <div class="item">
                         <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="Spendenbild">
                         <p><strong>{{ spende['produkt'] }}</strong><br>{{ spende['ort'] }}</p>
+
+                        {% if session.get('org_id') %}
+                            <form action="{{ url_for('spende_annehmen', spende_id=spende['id']) }}" method="post">
+                                <button type="submit">Spende annehmen</button>
+                            </form>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}

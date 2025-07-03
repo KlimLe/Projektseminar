@@ -9,14 +9,17 @@
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}">Suche</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
         <a href="{{ url_for('spenden') }}">Spenden</a>
-        <a href="{{ url_for('meine_spenden') }}" class="active">Meine Spenden</a>
+        <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
+        <a href="{{ url_for('org_spenden') }}" class="active">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
     {% endif %}
 
@@ -26,28 +29,42 @@
     </nav>
 
     <main class="content">
-        <h2>Geldspenden an Ihre Organisation</h2>
+        <h2>Geldspenden</h2>
         {% if geldspenden %}
             <ul>
-            {% for spende in geldspenden %}
-                <li>{{ spende['betrag'] }} € – {{ spende['zahlungsmethode'] }}</li>
-            {% endfor %}
+                {% for spende in geldspenden %}
+                    <li>{{ spende.betrag }} € – via {{ spende.zahlungsmethode }}</li>
+                {% endfor %}
             </ul>
         {% else %}
-            <p>Keine Geldspenden vorhanden.</p>
+            <p>Noch keine Geldspenden erhalten.</p>
+        {% endif %}
+
+        <h2>Angenommene Sachspenden</h2>
+        {% if angenommene_sachspenden %}
+            <ul>
+                {% for spende in angenommene_sachspenden %}
+                    <li>{{ spende.produkt }} – {{ spende.ort }} (gekauft am {{ spende.kaufdatum }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Noch keine Sachspenden angenommen.</p>
         {% endif %}
 
         <h2>Verfügbare Sachspenden</h2>
-        {% if sachspenden %}
+        {% if verfuegbare_sachspenden %}
             <ul>
-            {% for spende in sachspenden %}
-                <li>
-                    {{ spende['produkt'] }} ({{ spende['ort'] }}) – {{ spende['kaufdatum'] }}
-                </li>
-            {% endfor %}
+                {% for spende in verfuegbare_sachspenden %}
+                    <li>
+                        {{ spende.produkt }} – {{ spende.ort }} (gekauft am {{ spende.kaufdatum }})
+                        <form method="post" action="{{ url_for('spende_annehmen', spende_id=spende.id) }}">
+                            <button type="submit">Annehmen</button>
+                        </form>
+                    </li>
+                {% endfor %}
             </ul>
         {% else %}
-            <p>Keine Sachspenden verfügbar.</p>
+            <p>Keine Spenden verfügbar.</p>
         {% endif %}
     </main>
 </body>

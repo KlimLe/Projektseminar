@@ -49,7 +49,7 @@ def register_spender():
         except sqlite3.IntegrityError:
             return 'E-Mail bereits registriert. Bitte verwende eine andere.'
 
-    return render_template('register_spender.html', fehler='E-Mail bereits registriert.')
+    return render_template('register_spender.html')
 
 @app.route('/register_organisation', methods=['GET', 'POST'])
 def register_organisation():
@@ -134,10 +134,12 @@ def startseite():
 
 @app.route('/suche')
 def suche():
-    if 'user_id' not in session:
-        return redirect(url_for('login_spender'))
     conn = get_db_connection()
-    sachspenden = conn.execute('SELECT * FROM sachspende').fetchall()
+
+    sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id IS NULL'
+    ).fetchall()
+
     conn.close()
     return render_template('suche.html', sachspenden=sachspenden)
 
@@ -217,6 +219,20 @@ def meine_spenden():
 
     return render_template('meine_spenden.html', sachspenden=sachspenden, geldspenden=geldspenden)
 
+@app.route('/spende_annehmen/<int:spende_id>', methods=['POST'])
+def spende_annehmen(spende_id):
+    if 'org_id' not in session:
+        return redirect(url_for('login_organisation'))
+
+    org_id = session['org_id']
+    conn = get_db_connection()
+
+    conn.execute('UPDATE sachspende SET org_id = ? WHERE id = ?', (org_id, spende_id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('suche'))
+
 @app.route('/zertifikate', methods=['GET', 'POST'])
 def zertifikate():
     if 'org_id' not in session:
@@ -244,20 +260,29 @@ def org_spenden():
     if 'org_id' not in session:
         return redirect(url_for('login_organisation'))
 
-    org_id = session['org_id']
     conn = get_db_connection()
+    org_id = session['org_id']
 
-    geldspenden = conn.execute(
-        'SELECT * FROM geldspende WHERE organisation = (SELECT name FROM organisation WHERE id = ?)',
-        (org_id,)
+    angenommene_sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id = ?', (org_id,)
     ).fetchall()
 
-    sachspenden = conn.execute(
-        'SELECT * FROM sachspende WHERE user_id IS NOT NULL'
+    verfuegbare_sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id IS NULL'
+    ).fetchall()
+
+    geldspenden = conn.execute(
+        'SELECT * FROM geldspende WHERE organisation_id = ?', (org_id,)
     ).fetchall()
 
     conn.close()
-    return render_template('org_spenden.html', geldspenden=geldspenden, sachspenden=sachspenden)
+
+    return render_template(
+        'org_spenden.html',
+        angenommene_sachspenden=angenommene_sachspenden,
+        verfuegbare_sachspenden=verfuegbare_sachspenden,
+        geldspenden=geldspenden
+    )
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
