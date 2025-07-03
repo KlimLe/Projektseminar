@@ -9,14 +9,17 @@
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}">Suche</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
         <a href="{{ url_for('spenden') }}" class="active">Spenden</a>
         <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
     {% endif %}
 
@@ -35,7 +38,9 @@
 
         <section>
             <h2>Sachspende hochladen</h2>
-            <form method="POST" action="{{ url_for('spenden') }}">
+            <form method="POST" action="{{ url_for('spenden') }}" enctype="multipart/form-data">
+                <label for="bild">Bild zur Spende hochladen:</label>
+                <input type="file" id="bild" name="bild" accept="image/*">
                 <input type="hidden" name="spendenart" value="sache">
                 <input type="text" name="produkt" placeholder="Produktbezeichnung" required>
                 <input type="text" name="ort" placeholder="Ort" required>
@@ -52,7 +57,7 @@
                     <option>Organisation2</option>
                 </select>
                 <select name="zahlungsmethode" required>
-                    <option value="">Organisation wählen</option>
+                    <option value="">Zahlungsmethode wählen</option>
                     <option>PayPal</option>
                     <option>Kreditkarte</option>
                 </select>

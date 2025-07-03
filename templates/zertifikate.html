@@ -2,21 +2,24 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Zertifikate</title>
+    <title>Zertifikatsübersicht</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body id="zertifikate-page">
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}">Suche</a>
-        <a href="{{ url_for('spenden') }}">Spenden</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('spenden') }}" class="active">Spenden</a>
         <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('zertifikate') }}" class="active">Zertifikate</a>
+        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}">Einstellungen</a>
     {% endif %}
 
@@ -25,15 +28,27 @@
     {% endif %}
     </nav>
 
-    <main class="content">
-        <h1>Zertifikat</h1>
+    <div class="content">
+        <h2>Verifizierungsunterlagen</h2>
 
-        {% if zertifikat_pfad %}
-            <p>Hochgeladenes Zertifikat:</p>
-            <a href="{{ url_for('static', filename=zertifikat_pfad) }}" target="_blank">{{ zertifikat_pfad.split('/')[-1] }}</a>
+        {% if org['zertifikat'] %}
+            <p><strong>Hochgeladenes Zertifikat:</strong></p>
+            {% if org['zertifikat'].endswith('.pdf') %}
+                <a href="{{ url_for('static', filename=org['zertifikat'].split('static/')[-1]) }}" target="_blank">PDF anzeigen</a>
+            {% else %}
+                <img src="{{ url_for('static', filename=org['zertifikat'].split('static/')[-1]) }}" alt="Zertifikat" style="max-width:300px;">
+            {% endif %}
         {% else %}
-            <p>Kein Zertifikat vorhanden.</p>
+            <p>Kein Zertifikat hochgeladen.</p>
         {% endif %}
-    </main>
+
+        <hr>
+
+        <h3>Neues Zertifikat hochladen</h3>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="zertifikat" accept=".pdf,.png,.jpg,.jpeg" required>
+            <button type="submit">Hochladen</button>
+        </form>
+    </div>
 </body>
 </html>

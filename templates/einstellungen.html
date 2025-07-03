@@ -9,14 +9,17 @@
     <nav>
     <a href="{{ url_for('startseite') }}">Startseite</a>
 
-    {% if session.get('user_id') %}
+    {% if session.get('user_id') or session.get('org_id') %}
         <a href="{{ url_for('suche') }}">Suche</a>
+    {% endif %}
+
+    {% if session.get('user_id') %}
         <a href="{{ url_for('spenden') }}">Spenden</a>
         <a href="{{ url_for('meine_spenden') }}">Meine Spenden</a>
         <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
 
     {% elif session.get('org_id') %}
-        <a href="{{ url_for('zertifikate') }}">Zertifikate</a>
+        <a href="{{ url_for('org_spenden') }}">Spendenübersicht</a>
         <a href="{{ url_for('einstellungen') }}" class="active">Einstellungen</a>
     {% endif %}
 
@@ -32,8 +35,8 @@
     <section>
 
         <div style="text-align: center;">
-            <img src="profilbild.jpg" alt="Profilbild" style="width:100px; border-radius:50%;">
-            <p><strong>Max Mustermann</strong><br>max.mustermann@gmail.com</p>
+            <img src="{{ url_for('static', filename='images/profilbild.jpg') }}" alt="Profilbild" style="width:100px; border-radius:50%;">
+            <p><strong>{{ nutzer['name'] }}</strong><br>{{ nutzer['email'] }}</p>
         </div>
 
         <div class="card">
@@ -45,7 +48,12 @@
         </label>
         <p><a href="#">Passwort ändern</a></p>
         <p><a href="#">Sprache ändern</a></p>
-
+        {% if session.get('org_id') %}
+            <div class="card">
+                <h3>Organisation</h3>
+            </div>
+            <p><a href="{{ url_for('zertifikate') }}">Zertifikat</a></p>
+        {% endif %}
 
         <div class="card">
             <h3>Informationen</h3>

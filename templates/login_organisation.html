@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body id="login-org-page">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
+    <div class="login-logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo von ReGive">
+    </div>
     <form method="post">
         <p>E-Mail-Adresse</p>
         <label>

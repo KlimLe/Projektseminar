@@ -12,10 +12,10 @@ def get_db_connection():
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/zertifikate'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
-app.config['UPLOAD_FOLDER'] = 'static/zertifikate'
+app.config['UPLOAD_FOLDER_ZERTIFIKATE'] = 'static/zertifikate'
+app.config['UPLOAD_FOLDER_SPENDEN'] = 'static/spenden_bilder'
 app.config['DEBUG'] = True
 
 @app.route('/')
@@ -49,7 +49,7 @@ def register_spender():
         except sqlite3.IntegrityError:
             return 'E-Mail bereits registriert. Bitte verwende eine andere.'
 
-    return render_template('register_spender.html', fehler='E-Mail bereits registriert.')
+    return render_template('register_spender.html')
 
 @app.route('/register_organisation', methods=['GET', 'POST'])
 def register_organisation():
@@ -69,7 +69,7 @@ def register_organisation():
         zertifikat_pfad = None
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            zertifikat_pfad = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            zertifikat_pfad = os.path.join(app.config['UPLOAD_FOLDER_ZERTIFIKATE'], filename)
             file.save(zertifikat_pfad)
 
         conn = get_db_connection()
@@ -112,7 +112,7 @@ def login_organisation():
 
         if org and check_password_hash(org['passwort'], passwort):
             session['org_id'] = org['id']
-            return redirect(url_for('startseite'))  # Oder eigene Organisationsseite
+            return redirect(url_for('startseite'))
         else:
             return render_template('login_organisation.html', fehler='Login fehlgeschlagen. Bitte überprüfe deine Daten.')
 
@@ -134,10 +134,12 @@ def startseite():
 
 @app.route('/suche')
 def suche():
-    if 'user_id' not in session:
-        return redirect(url_for('login_spender'))
     conn = get_db_connection()
-    sachspenden = conn.execute('SELECT * FROM sachspende').fetchall()
+
+    sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id IS NULL'
+    ).fetchall()
+
     conn.close()
     return render_template('suche.html', sachspenden=sachspenden)
 
@@ -148,7 +150,6 @@ def spenden():
 
     if request.method == 'POST':
         spendenart = request.form.get('spendenart')
-
         conn = get_db_connection()
         user_id = session['user_id']
 
@@ -157,9 +158,23 @@ def spenden():
                 produkt = request.form['produkt']
                 ort = request.form['ort']
                 kaufdatum = request.form['kaufdatum']
+
+                file = request.files.get('bild')
+                bild_pfad = None
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    spenden_bilder_ordner = app.config['UPLOAD_FOLDER_SPENDEN']
+                    os.makedirs(spenden_bilder_ordner, exist_ok=True)
+                    full_path = os.path.join(spenden_bilder_ordner, filename)
+                    file.save(full_path)
+                    bild_pfad = os.path.join('spenden_bilder', filename).replace('\\', '/')
+                else:
+                    fehler = "Ungültiges Dateiformat. Bitte nur JPG, PNG oder JPEG hochladen."
+                    return render_template('spenden.html', fehler=fehler)
+
                 conn.execute(
-                    'INSERT INTO sachspende (produkt, ort, kaufdatum, user_id) VALUES (?, ?, ?, ?)',
-                    (produkt, ort, kaufdatum, user_id)
+                    'INSERT INTO sachspende (produkt, ort, kaufdatum, user_id, bild) VALUES (?, ?, ?, ?, ?)',
+                    (produkt, ort, kaufdatum, user_id, bild_pfad)
                 )
 
             elif spendenart == 'geld':
@@ -186,7 +201,19 @@ def spenden():
 
 @app.route('/einstellungen')
 def einstellungen():
-    return render_template('einstellungen.html')
+    if 'user_id' in session:
+        conn = get_db_connection()
+        nutzer = conn.execute('SELECT * FROM spender WHERE id = ?', (session['user_id'],)).fetchone()
+        conn.close()
+        return render_template('einstellungen.html', nutzer=nutzer)
+
+    elif 'org_id' in session:
+        conn = get_db_connection()
+        orga = conn.execute('SELECT * FROM organisation WHERE id = ?', (session['org_id'],)).fetchone()
+        conn.close()
+        return render_template('einstellungen.html', nutzer=orga)
+
+    return redirect(url_for('index'))
 
 @app.route('/meine_spenden')
 def meine_spenden():
@@ -205,18 +232,70 @@ def meine_spenden():
 
     return render_template('meine_spenden.html', sachspenden=sachspenden, geldspenden=geldspenden)
 
-@app.route('/zertifikate')
-def zertifikate():
+@app.route('/spende_annehmen/<int:spende_id>', methods=['POST'])
+def spende_annehmen(spende_id):
     if 'org_id' not in session:
         return redirect(url_for('login_organisation'))
 
     org_id = session['org_id']
     conn = get_db_connection()
-    org = conn.execute('SELECT zertifikat FROM organisation WHERE id = ?', (org_id,)).fetchone()
+
+    conn.execute('UPDATE sachspende SET org_id = ? WHERE id = ?', (org_id, spende_id))
+    conn.commit()
     conn.close()
 
-    zertifikat_pfad = org['zertifikat'] if org and org['zertifikat'] else None
-    return render_template('zertifikate.html', zertifikat_pfad=zertifikat_pfad)
+    return redirect(url_for('suche'))
+
+@app.route('/zertifikate', methods=['GET', 'POST'])
+def zertifikate():
+    if 'org_id' not in session:
+        return redirect(url_for('login_organisation'))
+
+    conn = get_db_connection()
+
+    if request.method == 'POST':
+        file = request.files.get('zertifikat')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            pfad = os.path.join(app.config['UPLOAD_FOLDER_SPENDEN'], filename)
+            file.save(pfad)
+
+            conn.execute("UPDATE organisation SET zertifikat = ? WHERE id = ?", (pfad, session['org_id']))
+            conn.commit()
+
+    org = conn.execute('SELECT * FROM organisation WHERE id = ?', (session['org_id'],)).fetchone()
+    conn.close()
+
+    return render_template('zertifikate.html', org=org)
+
+@app.route('/org_spenden')
+def org_spenden():
+    if 'org_id' not in session:
+        return redirect(url_for('login_organisation'))
+
+    conn = get_db_connection()
+    org_id = session['org_id']
+
+    angenommene_sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id = ?', (org_id,)
+    ).fetchall()
+
+    verfuegbare_sachspenden = conn.execute(
+        'SELECT * FROM sachspende WHERE org_id IS NULL'
+    ).fetchall()
+
+    geldspenden = conn.execute(
+        'SELECT * FROM geldspende WHERE organisation_id = ?', (org_id,)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        'org_spenden.html',
+        angenommene_sachspenden=angenommene_sachspenden,
+        verfuegbare_sachspenden=verfuegbare_sachspenden,
+        geldspenden=geldspenden
+    )
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
