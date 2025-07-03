@@ -69,7 +69,9 @@ def register_organisation():
         zertifikat_pfad = None
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            zertifikat_pfad = os.path.join(app.config['UPLOAD_FOLDER_ZERTIFIKATE'], filename)
+            ordner = app.config['UPLOAD_FOLDER_ZERTIFIKATE']
+            os.makedirs(ordner, exist_ok=True)
+            zertifikat_pfad = os.path.join(ordner, filename)
             file.save(zertifikat_pfad)
 
         conn = get_db_connection()
